@@ -92,7 +92,12 @@ public class VerticalBar extends JPanel {
         return array_new;
     }
 
-    void setPreferredSize() {
+    /*
+    * Sets the preferred size of the bar based on the row with the most
+    * numbers.
+    * Returns its prefered width.
+    */
+    int setPreferredSize() {
         int width = 0;
         for (int[] barNumber : barNumbers) {
             if (barNumber.length > width) {
@@ -100,5 +105,6 @@ public class VerticalBar extends JPanel {
             }
         }
         setPreferredSize(new Dimension(width * NonogramFrame.squareSize, rows * NonogramFrame.squareSize));
+        return width * NonogramFrame.squareSize;
     }
 }

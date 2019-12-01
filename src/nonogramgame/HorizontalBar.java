@@ -68,7 +68,12 @@ public class HorizontalBar extends JPanel {
         repaint();
     }
 
-    public void setPreferredSize() {
+    /*
+    * Sets the preferred size of the bar based on the column with the most
+    * numbers.
+    * Returns its prefered height.
+    */
+    public int setPreferredSize() {
         int height = 0;
         for (int[] barNumber : barNumbers) {
             if (barNumber.length > height) {
@@ -76,5 +81,6 @@ public class HorizontalBar extends JPanel {
             }
         }
         setPreferredSize(new Dimension(columns * NonogramFrame.squareSize, height * NonogramFrame.fontSize));
+        return height * NonogramFrame.fontSize;
     }
 }

@@ -30,7 +30,24 @@ public class Playfield extends JPanel implements MouseListener, MouseMotionListe
     @Override
     public void paint(Graphics g) {
         Dimension window = getPreferredSize();
+        
+        //clear background
+        g.setColor(Color.WHITE);
         g.fillRect(0, 0, window.width, window.height);
+        g.setColor(Color.WHITE);
+        g.drawRect(0, 0, window.width, window.height);
+        
+        //draw the grid
+        for (int i = 0; i < Math.max(nonogramWidth, nonogramHeight); i++) {
+            if (i % 5 == 0) {
+                g.setColor(Color.DARK_GRAY);
+            } else {
+                g.setColor(Color.LIGHT_GRAY);
+            }
+            g.drawLine((int) (i * NonogramFrame.squareSize), 0, (int) (i * NonogramFrame.squareSize), window.height);
+            g.drawLine(0, (int) (i * NonogramFrame.squareSize), window.width, (int) (i * NonogramFrame.squareSize));
+        }
+        
         if (nonogramWidth != 0) {
             for (int i = 0; i < nonogramWidth; i++) {
                 for (int j = 0; j < nonogramHeight; j++) {
@@ -47,24 +64,12 @@ public class Playfield extends JPanel implements MouseListener, MouseMotionListe
                         default:
                             throw new AssertionError();
                     }
-                    g.fillRect((int) NonogramFrame.squareSize * i, NonogramFrame.squareSize * j, NonogramFrame.squareSize, NonogramFrame.squareSize);
+                    g.fillRect((int) NonogramFrame.squareSize * i + 3, NonogramFrame.squareSize * j + 3, NonogramFrame.squareSize - 5, NonogramFrame.squareSize - 5);
                 }
             }
         }
 
         drawMouseDragged(g);
-
-        //draws the grid
-        for (int i = 0; i < Math.max(nonogramWidth, nonogramHeight); i++) {
-            if (i % 5 == 0) {
-                g.setColor(Color.DARK_GRAY);
-            } else {
-                g.setColor(Color.LIGHT_GRAY);
-            }
-
-            g.drawLine((int) (i * NonogramFrame.squareSize), 0, (int) (i * NonogramFrame.squareSize), window.height);
-            g.drawLine(0, (int) (i * NonogramFrame.squareSize), window.width, (int) (i * NonogramFrame.squareSize));
-        }
     }
 
     public void setNonogramSize(int width, int height) {
@@ -188,7 +193,7 @@ public class Playfield extends JPanel implements MouseListener, MouseMotionListe
             }
             for (int i = tempStartX; i <= movedX; i++) {
                 for (int j = tempStartY; j <= movedY; j++) {
-                    g.fillRect((int) NonogramFrame.squareSize * i, NonogramFrame.squareSize * j, NonogramFrame.squareSize, NonogramFrame.squareSize);
+                    g.fillRect((int) NonogramFrame.squareSize * i + 3, NonogramFrame.squareSize * j + 3, NonogramFrame.squareSize - 5, NonogramFrame.squareSize - 5);
                 }
             }
         }

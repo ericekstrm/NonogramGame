@@ -28,8 +28,8 @@ public class NonogramFrame extends JFrame implements KeyListener{
     int nonogramWidth;
     int nonogramHeight;
 
-    final int overviewWidth = 100;
-    final int overviewHeight = 100;
+    int overviewWidth = 100;
+    int overviewHeight = 100;
     int playfieldWidth = squareSize * 10;
     int playfieldHeight = squareSize * 10;
 
@@ -80,12 +80,13 @@ public class NonogramFrame extends JFrame implements KeyListener{
         
         vBar.setRows(nonogramHeight);
         vBar.generateBarNumbers(nonogramAnswer);
-        vBar.setPreferredSize();
+        overviewWidth = vBar.setPreferredSize();
         
         hBar.setColumns(nonogramWidth);
         hBar.generateBarNumbers(nonogramAnswer);
-        hBar.setPreferredSize();
+        overviewHeight = hBar.setPreferredSize();
 
+        oImage.setPreferredSize(new Dimension(overviewWidth, overviewHeight));
         
         pack();
     }
