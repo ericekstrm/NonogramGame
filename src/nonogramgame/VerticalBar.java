@@ -35,8 +35,8 @@ public class VerticalBar extends JPanel {
 
             for (int iy = 0; iy < rows; iy++) {
                 for (int ix = 0; ix < barNumbers[iy].length; ix++) {
-                    g.drawRect(ix*NonogramFrame.fontSize, iy * verticalSize, NonogramFrame.fontSize, NonogramFrame.squareSize);
-                    g.drawString(Integer.toString(barNumbers[iy][ix]), ix * NonogramFrame.fontSize + 1, iy * verticalSize + NonogramFrame.squareSize);
+                    g.drawRect(ix*NonogramFrame.squareSize, iy * verticalSize, NonogramFrame.squareSize, NonogramFrame.squareSize);
+                    g.drawString(Integer.toString(barNumbers[iy][ix]), ix * NonogramFrame.squareSize + 1, iy * verticalSize + NonogramFrame.squareSize);
                 }
             }
         }
@@ -95,11 +95,10 @@ public class VerticalBar extends JPanel {
     void setPreferredSize() {
         int width = 0;
         for (int[] barNumber : barNumbers) {
-            System.out.println(barNumber.length);
             if (barNumber.length > width) {
                 width = barNumber.length;
             }
         }
-        setPreferredSize(new Dimension(width * 12, rows * NonogramFrame.squareSize));
+        setPreferredSize(new Dimension(width * NonogramFrame.squareSize, rows * NonogramFrame.squareSize));
     }
 }
