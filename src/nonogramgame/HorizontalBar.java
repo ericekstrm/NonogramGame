@@ -9,8 +9,10 @@ import javax.swing.JPanel;
 public class HorizontalBar extends JPanel {
 
     int columns = 0;
+    int height = 0;
+    
     int[][] barNumbers;
-
+    
     public HorizontalBar(int width, int height) {
 
         setPreferredSize(new Dimension(width, height));
@@ -19,20 +21,28 @@ public class HorizontalBar extends JPanel {
     @Override
     public void paint(Graphics g) {
         Dimension window = getPreferredSize();
-        g.setColor(Color.LIGHT_GRAY);
-        g.fillRect(0, 0, window.width, window.height);
-        g.setColor(Color.BLACK);
-        g.drawRect(0, 0, window.width, window.height - 1);
+        //g.setColor(Color.LIGHT_GRAY);
+        //g.fillRect(0, 0, window.width, window.height);
+        //g.setColor(Color.BLACK);
+        //g.drawRect(0, 0, window.width, window.height - 1);
         if (columns != 0) {
-            int horizontalSize = window.width / columns;
+            int sSize = window.width / columns;
 
+            //draw vertical lines
             g.setColor(Color.black);
+            for (int i = 0; i < columns; i++) {
+                g.drawLine(i * sSize, 0, i * sSize, window.height);
+            }
 
+            //draw horizontal lines
+            for (int i = 0; i < height; i++) {
+                g.drawLine(i * sSize, 0, i * sSize, window.height);
+            }
+        
             for (int iy = 0; iy < columns; iy++) {
-                
                 for (int ix = 0; ix < barNumbers[iy].length; ix++) {
-                    g.drawRect(iy * horizontalSize, ix*NonogramFrame.fontSize, NonogramFrame.squareSize, NonogramFrame.fontSize);
-                    g.drawString(Integer.toString(barNumbers[iy][ix]), iy * horizontalSize + 1, ix * NonogramFrame.fontSize + NonogramFrame.fontSize);
+                    String s = Integer.toString(barNumbers[iy][ix]);
+                    g.drawString(s, iy * sSize + 2, (ix + 1) * sSize - 2 + window.height - barNumbers[iy].length * sSize);
                 }
             }
         }
@@ -72,7 +82,7 @@ public class HorizontalBar extends JPanel {
     * Sets the preferred size of the bar based on the column with the most
     * numbers.
     * Returns its prefered height.
-    */
+     */
     public int setPreferredSize() {
         int height = 0;
         for (int[] barNumber : barNumbers) {
@@ -80,7 +90,7 @@ public class HorizontalBar extends JPanel {
                 height = barNumber.length;
             }
         }
-        setPreferredSize(new Dimension(columns * NonogramFrame.squareSize, height * NonogramFrame.fontSize));
-        return height * NonogramFrame.fontSize;
+        setPreferredSize(new Dimension(columns * NonogramFrame.squareSize, height * NonogramFrame.squareSize));
+        return height * NonogramFrame.squareSize;
     }
 }

@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 public class VerticalBar extends JPanel {
 
     int rows = 0;
+    int width = 0;
 
     int[][] barNumbers;
 
@@ -20,23 +21,30 @@ public class VerticalBar extends JPanel {
     @Override
     public void paint(Graphics g) {
         Dimension window = getPreferredSize();
-        g.setColor(Color.LIGHT_GRAY);
-        g.fillRect(0, 0, window.width, window.height);
-        g.setColor(Color.BLACK);
-        g.drawRect(0, 0, window.width - 1, window.height);
+        //g.setColor(Color.LIGHT_GRAY);
+        //g.fillRect(0, 0, window.width, window.height);
+        //g.setColor(Color.BLACK);
+        //g.drawRect(0, 0, window.width - 1, window.height);
 
         if (rows != 0) {
-            int verticalSize = window.height / rows;
 
+            int sSize = NonogramFrame.squareSize;
+
+            //draw horizontal lines
             g.setColor(Color.black);
             for (int i = 0; i < rows; i++) {
-                g.drawRect(0, i * verticalSize, window.width, verticalSize);
+                g.drawLine(0, i * sSize, window.width, i * sSize);
+            }
+
+            //draw vertical lines
+            for (int i = 0; i < width; i++) {
+                g.drawLine(i * sSize, 0, i * sSize, window.height);
             }
 
             for (int iy = 0; iy < rows; iy++) {
                 for (int ix = 0; ix < barNumbers[iy].length; ix++) {
-                    g.drawRect(ix*NonogramFrame.squareSize, iy * verticalSize, NonogramFrame.squareSize, NonogramFrame.squareSize);
-                    g.drawString(Integer.toString(barNumbers[iy][ix]), ix * NonogramFrame.squareSize + 1, iy * verticalSize + NonogramFrame.squareSize);
+                    String s = Integer.toString(barNumbers[iy][ix]);
+                    g.drawString(s, ix * sSize + 2 + window.width - barNumbers[iy].length * sSize, (iy + 1) * sSize - 2);
                 }
             }
         }
@@ -71,6 +79,14 @@ public class VerticalBar extends JPanel {
             barNumbers[iy] = Arrays.asList(strings).stream().mapToInt(Integer::parseInt).toArray();
         }
         repaint();
+
+        //find the max width of the bar
+        width = 0;
+        for (int[] barNumber : barNumbers) {
+            if (barNumber.length > width) {
+                width = barNumber.length;
+            }
+        }
     }
 
     public int[][] transpose(int[][] array) {
@@ -96,14 +112,8 @@ public class VerticalBar extends JPanel {
     * Sets the preferred size of the bar based on the row with the most
     * numbers.
     * Returns its prefered width.
-    */
+     */
     int setPreferredSize() {
-        int width = 0;
-        for (int[] barNumber : barNumbers) {
-            if (barNumber.length > width) {
-                width = barNumber.length;
-            }
-        }
         setPreferredSize(new Dimension(width * NonogramFrame.squareSize, rows * NonogramFrame.squareSize));
         return width * NonogramFrame.squareSize;
     }

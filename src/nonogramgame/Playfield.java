@@ -30,13 +30,13 @@ public class Playfield extends JPanel implements MouseListener, MouseMotionListe
     @Override
     public void paint(Graphics g) {
         Dimension window = getPreferredSize();
-        
+
         //clear background
         g.setColor(Color.WHITE);
         g.fillRect(0, 0, window.width, window.height);
         g.setColor(Color.WHITE);
         g.drawRect(0, 0, window.width, window.height);
-        
+
         //draw the grid
         for (int i = 0; i < Math.max(nonogramWidth, nonogramHeight); i++) {
             if (i % 5 == 0) {
@@ -47,7 +47,7 @@ public class Playfield extends JPanel implements MouseListener, MouseMotionListe
             g.drawLine((int) (i * NonogramFrame.squareSize), 0, (int) (i * NonogramFrame.squareSize), window.height);
             g.drawLine(0, (int) (i * NonogramFrame.squareSize), window.width, (int) (i * NonogramFrame.squareSize));
         }
-        
+
         if (nonogramWidth != 0) {
             for (int i = 0; i < nonogramWidth; i++) {
                 for (int j = 0; j < nonogramHeight; j++) {
@@ -70,6 +70,8 @@ public class Playfield extends JPanel implements MouseListener, MouseMotionListe
         }
 
         drawMouseDragged(g);
+
+        drawInfoWindow(g);
     }
 
     public void setNonogramSize(int width, int height) {
@@ -86,6 +88,9 @@ public class Playfield extends JPanel implements MouseListener, MouseMotionListe
     int movedX;
     int movedY;
     int mouseButtonPressed = -1;
+    
+    int mouseX = 0;
+    int mouseY = 0;
 
     @Override
     public void mouseClicked(MouseEvent e) {
@@ -99,6 +104,9 @@ public class Playfield extends JPanel implements MouseListener, MouseMotionListe
 
         startX = e.getX() * nonogramWidth / window.width;
         startY = e.getY() * nonogramHeight / window.height;
+        
+        movedX = startX;
+        movedY = startY;
 
     }
 
@@ -136,7 +144,11 @@ public class Playfield extends JPanel implements MouseListener, MouseMotionListe
 
         for (int i = startX; i <= endX; i++) {
             for (int j = startY; j <= endY; j++) {
-                nonogram[i][j] = type;
+                try {
+                    nonogram[i][j] = type;
+                } catch (Exception ex) {
+                }
+
             }
         }
 
@@ -153,30 +165,38 @@ public class Playfield extends JPanel implements MouseListener, MouseMotionListe
 
     @Override
     public void mouseDragged(MouseEvent e) {
+        mouseX = e.getX();
+        mouseY = e.getY();
+        
         Dimension window = getPreferredSize();
         movedX = e.getX() * nonogramWidth / window.width;
         movedY = e.getY() * nonogramHeight / window.height;
+        
         repaint();
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
+        mouseX = e.getX();
+        mouseY = e.getY();
     }
 
     public void drawMouseDragged(Graphics g) {
         if (mouseButtonPressed != -1) {
             int tempStartX = startX;
             int tempStartY = startY;
+            int tempMovedX = movedX;
+            int tempMovedY = movedY;
 
-            if (movedX < tempStartX) {
-                int temp = movedX;
-                movedX = tempStartX;
+            if (tempMovedX < tempStartX) {
+                int temp = tempMovedX;
+                tempMovedX = tempStartX;
                 tempStartX = temp;
             }
 
-            if (movedY < tempStartY) {
-                int temp = movedY;
-                movedY = tempStartY;
+            if (tempMovedY < tempStartY) {
+                int temp = tempMovedY;
+                tempMovedY = tempStartY;
                 tempStartY = temp;
             }
 
@@ -191,11 +211,34 @@ public class Playfield extends JPanel implements MouseListener, MouseMotionListe
                     g.setColor(Color.WHITE);
                     break;
             }
-            for (int i = tempStartX; i <= movedX; i++) {
-                for (int j = tempStartY; j <= movedY; j++) {
+            for (int i = tempStartX; i <= tempMovedX; i++) {
+                for (int j = tempStartY; j <= tempMovedY; j++) {
                     g.fillRect((int) NonogramFrame.squareSize * i + 3, NonogramFrame.squareSize * j + 3, NonogramFrame.squareSize - 5, NonogramFrame.squareSize - 5);
                 }
             }
+        }
+    }
+
+    public void drawInfoWindow(Graphics g) {
+        if (mouseButtonPressed != -1) {
+            
+            int xValue = Math.abs(startX - movedX) + 1; // add 1 because of zero-indexing
+            int yValue = Math.abs(startY - movedY) + 1;
+            
+            //correct coordinates at edge
+            int x = mouseX + NonogramFrame.squareSize;
+            int y = mouseY - NonogramFrame.squareSize;
+            
+            
+            //draw box
+            g.setColor(Color.WHITE);
+            g.fillRect(x, y, NonogramFrame.squareSize * 3, NonogramFrame.squareSize);
+            g.setColor(Color.BLACK);
+            g.drawRect(x, y, NonogramFrame.squareSize * 3, NonogramFrame.squareSize);
+            
+            g.drawString("\"" + xValue + "\", \"" + yValue + "\"", x + 5, y + NonogramFrame.squareSize - 5);
+        } else {
+            repaint();
         }
     }
 }

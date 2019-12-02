@@ -12,11 +12,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import javax.swing.*;
 
-public class NonogramFrame extends JFrame implements KeyListener{
+public class NonogramFrame extends JFrame implements KeyListener {
 
     public static final int menuBarheight = 50;
     public static final int squareSize = 20;
-    public static final int fontSize = 12;
 
     OverviewImage oImage;
     Playfield pField;
@@ -74,31 +73,27 @@ public class NonogramFrame extends JFrame implements KeyListener{
         loadNonogram(nonogramName);
         playfieldWidth = squareSize * nonogramWidth;
         playfieldHeight = squareSize * nonogramHeight;
-        
+
         pField.setNonogramSize(nonogramWidth, nonogramHeight);
         pField.setPreferredSize(new Dimension(playfieldWidth, playfieldHeight));
-        
+
         vBar.setRows(nonogramHeight);
         vBar.generateBarNumbers(nonogramAnswer);
         overviewWidth = vBar.setPreferredSize();
-        
+
         hBar.setColumns(nonogramWidth);
         hBar.generateBarNumbers(nonogramAnswer);
         overviewHeight = hBar.setPreferredSize();
 
         oImage.setPreferredSize(new Dimension(overviewWidth, overviewHeight));
-        
+
         pack();
     }
 
-    /*
-    Nonograms saved on format (.txt):
-    5x5
-    101010
-    101010
-    101010
-    101010
-    101010
+    /**
+     * Nonograms saved on format (.txt): 5x5 101010 101010 101010 101010 101010
+     *
+     * @param fileName
      */
     public void loadNonogram(String fileName) {
         BufferedReader reader;
@@ -109,9 +104,11 @@ public class NonogramFrame extends JFrame implements KeyListener{
             nonogramHeight = Integer.parseInt(header.substring(header.indexOf("x") + 1));
 
             nonogramAnswer = new int[nonogramWidth][nonogramHeight];
-
+            String rest = reader.readLine();
             for (int i = 0; i < nonogramHeight; i++) {
-                String line = reader.readLine();
+                String line = rest.substring(0, nonogramWidth);
+                rest = rest.substring(nonogramWidth);
+
                 for (int j = 0; j < nonogramWidth; j++) {
                     nonogramAnswer[j][i] = Integer.parseInt(line.charAt(j) + "");
                 }
